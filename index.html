@@ -26,10 +26,103 @@
                 </p>
             </section>
 
-            <section>Slide 1</section>
-            <section>Slide 2</section>
+            <!--
+            <section>
+                <p>
+                    Press <kbd>[s]</kbd> to read the speaker notes (will open a new window).
+                </p>
+            </section>
+            -->
+
+            <section>
+                <h2>About this talk…</h2>
 
 
+                <aside class="notes">
+                    Every "real-world" application has some kind of logging infrastructure.
+                    Sometimes it's quick and simple (error_log), sometimes it's more sophisticated and configurable (Monolog).
+
+                    Unfortunately, many applications use logging inconsistently. The logging infrastructure is usually
+                    grown organically and not thought through. Logging isn't usually the most loved and fun aspect of the development.
+
+                    In this talk, we will take some time to talk about logging in large applications.
+                    Log exploitation (with tools such as ELK stacks/Graylog/Kafka/… ) will not be addressed.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Definition</h2>
+
+                <blockquote>
+                    “Detailed list of an application information, system performance, or user activities.”
+                </blockquote>
+
+                <aside class="notes">
+                    First of all, let's define what we talk about when we say "logs".
+
+                    As we see in this definition, logs can be almost anything. Any event that is relevant
+                    to explain the behavior of an application can be "logged" or saved somewhere for later
+                    use.
+
+                    What that tells us is that our logs might have different purposes and we have to take
+                    that into account when we design our logging strategy.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Logging strategies</h2>
+
+                <ul>
+                    <li>performance and resources</li>
+                    <li class="fragment">errors</li>
+                    <li class="fragment">user actions</li>
+                </ul>
+
+                <aside class="notes">
+                    I think that logs can serve different purposes. The most common being:
+
+                    * performance and resources: memory consumption, CPU/IO/network usage, external API calls and their response times, … Helps to monitor, debug and improve the general performance of the system.
+                    * errors: exceptions, warnings, unexpected responses, … Helps detecting and troubleshooting issues with the system or its environment.
+                    * user actions: actions performed by your users. Useful to help users when they come across an issue.
+                    * business metrics: business-related events. Can be used as a poor man’s BI tool.
+
+                    Therefore, the first step to write useful logs is to determine what they will be used for and by who.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Log, log, log!</h2>
+
+                <p>
+                    Be sure that all the relevant events are logged
+                </p>
+
+                <aside class="notes">
+                    Once your logging strategy is identified, be sure that all the relevant events are logged.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Some context: TEA</h2>
+
+                <aside class="notes">
+
+                </aside>
+            </section>
+
+            <section>
+                <h2></h2>
+
+                <aside class="notes">
+                </aside>
+            </section>
+
+            <section>
+                Contexte : TEA
+
+                Plusieurs applis/services qui s'utilisent les uns les autres
+                Une requête peut faire appel à plusieurs d'entre eux
+            </section>
 
             <section>
                 <h2>Thanks!</h2>
@@ -52,10 +145,10 @@
         slideNumber: true,
         history: true,
         dependencies: [
-            { src: 'reveal.js/lugin/markdown/marked.js' },
-            { src: 'reveal.js/lugin/markdown/markdown.js' },
-            { src: 'reveal.js/lugin/notes/notes.js', async: true },
-            { src: 'reveal.js/lugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+            { src: 'reveal.js/plugin/markdown/marked.js' },
+            { src: 'reveal.js/plugin/markdown/markdown.js' },
+            { src: 'reveal.js/plugin/notes/notes.js', async: true },
+            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
         ]
     });
     </script>
