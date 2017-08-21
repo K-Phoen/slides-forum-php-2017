@@ -1,0 +1,32 @@
+.reveal .slides section .fragment.current-visible {
+    display: none;
+}
+
+.reveal .slides section .fragment.current-visible.current-fragment {
+    display: block;
+}
+
+.reveal kbd {
+    background-color: #f0f0f0;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    color: #202020;
+    display: inline-block;
+    font-family: "SourceCodePro", monospace;
+    padding: 0.1rem;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.reveal table.log-levels {
+    font-size: 0.8em;
+}
+
+.reveal table.log-levels th {
+    font-weight: bold;
+}
+
+.reveal section pre {
+    width: 100%;
+}
+

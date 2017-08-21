@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="reveal.js/css/reveal.css">
     <link rel="stylesheet" href="reveal.js/css/theme/solarized.css">
+    <link rel="stylesheet" href="css/custom.css">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
@@ -26,13 +27,11 @@
                 </p>
             </section>
 
-            <!--
             <section>
                 <p>
                     Press <kbd>[s]</kbd> to read the speaker notes (will open a new window).
                 </p>
             </section>
-            -->
 
             <section>
                 <h2>About this talk…</h2>
@@ -84,9 +83,22 @@
                     * performance and resources: memory consumption, CPU/IO/network usage, external API calls and their response times, … Helps to monitor, debug and improve the general performance of the system.
                     * errors: exceptions, warnings, unexpected responses, … Helps detecting and troubleshooting issues with the system or its environment.
                     * user actions: actions performed by your users. Useful to help users when they come across an issue.
-                    * business metrics: business-related events. Can be used as a poor man’s BI tool.
+                    * business metrics: business-related events and statistics. Can be used as a poor man’s BI tool.
 
                     Therefore, the first step to write useful logs is to determine what they will be used for and by who.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Some context: TEA</h2>
+
+                <aside class="notes">
+                    From now on, I'll take my own experience working at TEA as basis for my examples.
+
+                    To keep it short: we build an e-book selling platform used by booksellers.
+                    The platform itself isn't a monolith, it's composed of several applications (not micro-services,
+                    we are not that hype) that work together. For instance, we have an ecommerce frontend that uses
+                    a warehouse when a reader wants to download its books.
                 </aside>
             </section>
 
@@ -98,12 +110,75 @@
                 </p>
 
                 <aside class="notes">
-                    Once your logging strategy is identified, be sure that all the relevant events are logged.
+                    In terms of logging strategy, we are mainly interested by the performance of the platform and
+                    potential errors.
+
+                    For our needs, relevant events include: CPU/memory usage, orders, API response times, errors,
+                    books integrations, …
+
+                    Log everything, you might need it!
                 </aside>
             </section>
 
             <section>
-                <h2>Some context: TEA</h2>
+                <h2>Log messages</h2>
+
+                <p>Logs should be explicit.</p>
+                <pre class="fragment"><code class="php" data-trim>
+order failed
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+Order "REF-42" failed: credit card number invalid.
+                </code></pre>
+
+                <aside class="notes">
+                    Write sentences describing the event and including the relevant details.
+                    Think about the person who will read the log.
+
+                    An order failed? Which one? Why? When?
+
+                    The first version is almost useless as it provides no information
+                    that can be used to explain what happened and what action should be taken.
+
+                    When a developer writes a log, he has in mind the context (in terms of code
+                    and application flow) in which the log is to be inserted. We often tend to
+                    write log messages that rely on this context… that is NOT present anymore when
+                    the log entry is read.
+
+                    To avoid having cryptic logs emitted by the application, log messages have to
+                    be the most explicit possible.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Chronological logs</h2>
+
+                <p>Logs should be timestamped.</p>
+                <pre class="fragment"><code class="php" data-trim>
+Order "REF-42" failed: credit card number invalid.
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
+                </code></pre>
+
+                <aside class="notes">
+                    The "when" question wasn't answered by the last log entry.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Human readable, machine parseable</h2>
+
+                <p>Logs should be human readable and unambiguously parseable.</p>
+                <pre class="fragment"><code class="php" data-trim>
+Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order "REF-42" failed: credit card number invalid.
+                </code></pre>
 
                 <aside class="notes">
 
@@ -111,17 +186,182 @@
             </section>
 
             <section>
-                <h2></h2>
+                <h2>Human readable, machine parseable</h2>
+
+                <p>Logs should be human readable and unambiguously parseable.</p>
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order "REF-42" failed: credit card number invalid.
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                </code></pre>
+
+                <aside class="notes">
+                    Easier to aggregate, easier to parse.
+                    If you use things like logstash, the only way to extract the order ref and reason is by using
+                    regex: it's slow (and can be complex, depending on the log entry to parse).
+                </aside>
+            </section>
+
+            <section>
+                <h2>Human readable, machine parseable</h2>
+
+                <p>
+                    JSON is fine.
+                </p>
+
+                <p>
+                    NEVER write multi-line logs.
+                </p>
+
+                <aside class="notes">
+                    Using JSON is easy for both developers and machines. But really, any plain-text, normalized format will do.
+                    Just ensure that you NEVER
+                </aside>
+            </section>
+
+            <section>
+                <h2>Context matters</h2>
+
+                <p>Logs should be human readable and unambiguously parseable.</p>
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid", "customer_id": 42}
+                </code></pre>
+
+                <aside class="notes">
+                    more context can't hurt
+                </aside>
+            </section>
+
+            <section>
+                <h2>Context matters</h2>
+
+                <p>Never log sensitive data.</p>
+
+                <aside class="notes">
+                    Passwords, tokens, email (depending on your application, it can be considered sensitive data)
+                </aside>
+            </section>
+
+            <section>
+                <h2>Divide and conquer</h2>
+
+                <p>Logs should be categorized by severity level.</p>
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                </code></pre>
+
+                <aside class="notes">
+                    All log entries do not have the same importance or severity.
+                    Some of them require an immediate action, whereas some others
+                    are just here to ease debugging and can be stripped in production.
+
+                    Be sure to include this information in your log output and properly
+                    configure your application depending on its environment.
+                </aside>
+            </section>
+
+            <section>
+                <h2>Divide and conquer: log levels</h2>
+
+                <p>As defined by the RFC <a href="https://tools.ietf.org/html/rfc5424">5424</a> (Syslog protocol)</p>
+
+                <table class="log-levels">
+                    <tbody>
+                        <tr>
+                            <th>debug</th>
+                            <td>Detailed debug information</td>
+                        </tr>
+                        <tr>
+                            <th>info</th>
+                            <td>Interesting events (user logs in, SQL queries, …)</td>
+                        </tr>
+                        <tr>
+                            <th>notice</th>
+                            <td>Normal but significant events</td>
+                        </tr>
+                        <tr>
+                            <th>warning</th>
+                            <td>Exceptional occurrences that are not errors</td>
+                        </tr>
+                        <tr>
+                            <th>error</th>
+                            <td>Runtime errors that do not require immediate action</td>
+                        </tr>
+                        <tr>
+                            <th>critical</th>
+                            <td>Critical conditions, action must be taken</td>
+                        </tr>
+                        <tr>
+                            <th>alert</th>
+                            <td>Action must be taken immediately</td>
+                        </tr>
+                        <tr>
+                            <th>emergency</th>
+                            <td>Emergency: system is unusable.</td>
+                        </tr>
+                    <tbody>
+                </table>
 
                 <aside class="notes">
                 </aside>
             </section>
 
             <section>
-                Contexte : TEA
+                <h2>Divide and conquer: subsystems</h2>
 
-                Plusieurs applis/services qui s'utilisent les uns les autres
-                Une requête peut faire appel à plusieurs d'entre eux
+                <p>Logs should be categorized by subsystem.</p>
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                </code></pre>
+
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                </code></pre>
+
+                <aside class="notes">
+                    tag the subsystem that emits the log
+                </aside>
+            </section>
+
+            <section>
+                <h2>Correlate logs</h2>
+
+                <pre class="fragment"><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"} {"requet_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"}
+                </code></pre>
+
+                <aside class="notes">
+                    to identify the events associated to a given request.
+                    In the same application, but even among applications and servers (business
+                    applications or infrastructure servers such as nginx and such)
+
+                    For this, a UUID is fine. The earlier it is generated, the better.
+
+                    I often include two sets of metadata in my log entries:
+                    * the first represents a log context and is associated to the event itself ;
+                    * the other represents extra metadata automatically added to any event emitted by the application.
+
+                    Monolog handles that nicely using "Processors": https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md#processors
+                </aside>
+            </section>
+
+            <section>
+                <h2>Infrastructure considerations</h2>
+
+                <ul>
+                    <li>compress your logs</li>
+                    <li>rotate (and eventually remove) your logs</li>
+                    <li>write logs locally</li>
+                </ul>
+
+                <aside class="notes">
+                </aside>
             </section>
 
             <section>
