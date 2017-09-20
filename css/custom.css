@@ -30,3 +30,6 @@
     width: 100%;
 }
 
+.reveal section pre code {
+    white-space: initial;
+}
