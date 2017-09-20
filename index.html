@@ -43,6 +43,7 @@
 
                     Unfortunately, many applications use logging inconsistently. The logging infrastructure is usually
                     grown organically and not thought through. Logging isn't usually the most loved and fun aspect of the development.
+                    Lots of us log blindly and without thinking of who will read these logs and why.
 
                     In this talk, we will take some time to talk about logging in large applications.
                     Log exploitation (with tools such as ELK stacks/Graylog/Kafka/… ) will not be addressed.
@@ -83,7 +84,7 @@
                     * performance and resources: memory consumption, CPU/IO/network usage, external API calls and their response times, … Helps to monitor, debug and improve the general performance of the system.
                     * errors: exceptions, warnings, unexpected responses, … Helps detecting and troubleshooting issues with the system or its environment.
                     * user actions: actions performed by your users. Useful to help users when they come across an issue.
-                    * business metrics: business-related events and statistics. Can be used as a poor man’s BI tool.
+                    * business events: some log entries can be transformed into business-related metrics and statistics. Can be used as a poor man’s BI tool.
 
                     Therefore, the first step to write useful logs is to determine what they will be used for and by who.
                 </aside>
@@ -98,7 +99,7 @@
                     To keep it short: we build an e-book selling platform used by booksellers.
                     The platform itself isn't a monolith, it's composed of several applications (not micro-services,
                     we are not that hype) that work together. For instance, we have an ecommerce frontend that uses
-                    a warehouse when a reader wants to download its books.
+                    a warehouse when a reader wants to download its books and both of them are coordinated by a "logistical platform".
                 </aside>
             </section>
 
@@ -106,17 +107,24 @@
                 <h2>Log, log, log!</h2>
 
                 <p>
-                    Ensure that all the relevant events are logged
+                    Ensure that all the relevant events are logged!
+                </p>
+
+                <p class="fragment">
+                    … relevant for who? <span class="fragment">and why?</span>
                 </p>
 
                 <aside class="notes">
                     In terms of logging strategy, we are mainly interested by the performance of the platform and
                     potential errors.
 
-                    For our needs, relevant events include: CPU/memory usage, orders, API response times, errors,
-                    books integrations, …
+                    For our needs, relevant events include mainly include business/user events such as
+                    orders, refunds, API response times, errors, books integrations, …
 
                     Log everything, you might need it!
+
+                    To help you decide if something is worth logging or not, ask yourself
+                    the following question: why logging this would be useful? to whom?
                 </aside>
             </section>
 
@@ -165,6 +173,8 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
 
                 <aside class="notes">
                     The "when" question wasn't answered by the last log entry.
+                    Timestamps help us correlate logs with other events (was there
+                    a global outage in our banking service at that time?)
                 </aside>
             </section>
 
@@ -198,7 +208,14 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 </code></pre>
 
                 <aside class="notes">
-                    Easier to aggregate, easier to parse.
+                    Let the tool used for logs exploitation decide if its better to interpolate these
+                    placeholders or not.
+                    Also, for some languages string concatenation can be relatively expensive. Especially
+                    if there are a lot of logs.
+
+                    For error reporting tools (sentry, airbrake, …), non interpolated logs will be easier
+                    to aggregate and to parse.
+
                     If you use things like logstash, the only way to extract the order ref and reason is by using
                     regex: it's slow (and can be complex, depending on the log entry to parse).
                 </aside>
