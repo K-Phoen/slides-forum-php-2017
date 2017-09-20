@@ -106,7 +106,7 @@
                 <h2>Log, log, log!</h2>
 
                 <p>
-                    Be sure that all the relevant events are logged
+                    Ensure that all the relevant events are logged
                 </p>
 
                 <aside class="notes">
@@ -224,7 +224,7 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
             <section>
                 <h2>Context matters</h2>
 
-                <p>Logs should be human readable and unambiguously parseable.</p>
+                <p>TODOOOOOOOOOOOOOOOOOOOOO</p>
                 <pre class="fragment"><code class="php" data-trim>
 [2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid", "customer_id": 42}
                 </code></pre>
@@ -333,7 +333,7 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Correlate logs</h2>
 
                 <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"} {"requet_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"}
+[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"} {"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"}
                 </code></pre>
 
                 <aside class="notes">
