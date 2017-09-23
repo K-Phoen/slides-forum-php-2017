@@ -100,6 +100,9 @@
                     The platform itself isn't a monolith, it's composed of several applications (not micro-services,
                     we are not that hype) that work together. For instance, we have an ecommerce frontend that uses
                     a warehouse when a reader wants to download its books and both of them are coordinated by a "logistical platform".
+
+                    In regards of the logging strategy, we are oriented towards errors and "user actions"
+                    logs. As developers, it helps us understand what's happening on the platform.
                 </aside>
             </section>
 
@@ -107,7 +110,7 @@
                 <h2>Log, log, log!</h2>
 
                 <p>
-                    Ensure that all the relevant events are logged!
+                    Ensure that all the <strong>relevant events</strong> are logged!
                 </p>
 
                 <p class="fragment">
@@ -115,7 +118,7 @@
                 </p>
 
                 <aside class="notes">
-                    In terms of logging strategy, we are mainly interested by the performance of the platform and
+                    In terms of logging strategy, we are mainly interested by user actions of the platform and
                     potential errors.
 
                     For our needs, relevant events include mainly include business/user events such as
@@ -125,6 +128,9 @@
 
                     To help you decide if something is worth logging or not, ask yourself
                     the following question: why logging this would be useful? to whom?
+
+                    Exercise: ask yourself "what does my application log?"
+                    Spoiler: if you want to answer by "everything", you have a problem.
                 </aside>
             </section>
 
@@ -132,12 +138,12 @@
                 <h2>Log messages</h2>
 
                 <p>Logs should be explicit.</p>
-                <pre class="fragment"><code class="php" data-trim>
+                <pre><code class="php" data-trim>
 order failed
                 </code></pre>
 
                 <pre class="fragment"><code class="php" data-trim>
-Order "REF-42" failed: credit card number invalid.
+Order "REF-42" failed: payment gateway unreachable.
                 </code></pre>
 
                 <aside class="notes">
@@ -163,12 +169,12 @@ Order "REF-42" failed: credit card number invalid.
                 <h2>Chronological logs</h2>
 
                 <p>Logs should be timestamped.</p>
-                <pre class="fragment"><code class="php" data-trim>
-Order "REF-42" failed: credit card number invalid.
+                <pre><code class="php" data-trim>
+Order "REF-42" failed: payment gateway unreachable.
                 </code></pre>
 
                 <pre class="fragment"><code class="php" data-trim>
-Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
+Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
                 </code></pre>
 
                 <aside class="notes">
@@ -182,12 +188,8 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Human readable, machine parseable</h2>
 
                 <p>Logs should be human readable and unambiguously parseable.</p>
-                <pre class="fragment"><code class="php" data-trim>
-Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
-                </code></pre>
-
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order "REF-42" failed: credit card number invalid.
+                <pre><code class="php" data-trim data-noescape>
+<mark class="fragment inserts">[2017-12-12T14:30:51.965Z] </mark>Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
                 </code></pre>
 
                 <aside class="notes">
@@ -199,12 +201,12 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Human readable, machine parseable</h2>
 
                 <p>Logs should be human readable and unambiguously parseable.</p>
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order "REF-42" failed: credit card number invalid.
+                <pre><code class="php" data-trim>
+[2017-12-12T14:30:51.965Z] Order "REF-42" failed: payment gateway unreachable.
                 </code></pre>
 
                 <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
                 </code></pre>
 
                 <aside class="notes">
@@ -242,8 +244,8 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Context matters</h2>
 
                 <p>TODOOOOOOOOOOOOOOOOOOOOO</p>
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid", "customer_id": 42}
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable", <mark>"customer_id": 42, "payment_transaction_id": 4224</mark>}
                 </code></pre>
 
                 <aside class="notes">
@@ -265,12 +267,8 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Divide and conquer</h2>
 
                 <p>Logs should be categorized by severity level.</p>
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
-                </code></pre>
-
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[INFO]</mark> Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
                 </code></pre>
 
                 <aside class="notes">
@@ -333,12 +331,9 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
                 <h2>Divide and conquer: subsystems</h2>
 
                 <p>Logs should be categorized by subsystem.</p>
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
-                </code></pre>
 
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"}
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[checkout] </mark>[INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
                 </code></pre>
 
                 <aside class="notes">
@@ -349,8 +344,8 @@ Order "REF-42" failed on 12/12/17 at 14h30: credit card number invalid.
             <section>
                 <h2>Correlate logs</h2>
 
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "credit card number invalid"} {"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"}
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"} <mark>{"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"</mark>}
                 </code></pre>
 
                 <aside class="notes">

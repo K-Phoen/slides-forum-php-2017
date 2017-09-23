@@ -33,3 +33,18 @@
 .reveal section pre code {
     white-space: initial;
 }
+
+.reveal .fragment.inserts {
+    display: none;
+}
+
+.reveal .fragment.inserts.visible {
+    display: inline;
+}
+
+.reveal mark, .reveal mark * {
+    font-weight: bold;
+    background-color: #74BC74;
+    color: #3f3f3f;
+    border-radius: 3px;
+}
