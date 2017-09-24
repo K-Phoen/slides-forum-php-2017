@@ -38,6 +38,19 @@
     display: none;
 }
 
+.reveal .fragment.removes:not(.visible), .reveal .fragment.removes:not(.visible) * {
+    display: inline;
+    opacity: 1;
+    visibility: visible;
+    color: inherit;
+    background-color: inherit;
+    font-weight: normal;
+}
+
+.reveal .fragment.removes.visible {
+    display: none;
+}
+
 .reveal .fragment.inserts.visible {
     display: inline;
 }

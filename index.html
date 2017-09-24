@@ -167,12 +167,8 @@ Order "REF-42" failed: payment gateway unreachable.
                 <h2>Chronological logs</h2>
 
                 <p>Logs should be timestamped.</p>
-                <pre><code class="php" data-trim>
-Order "REF-42" failed: payment gateway unreachable.
-                </code></pre>
-
-                <pre class="fragment"><code class="php" data-trim>
-Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
+                <pre><code class="php" data-trim data-noescape>
+Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>: payment gateway unreachable.
                 </code></pre>
 
                 <aside class="notes">
@@ -185,9 +181,9 @@ Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
             <section>
                 <h2>Human readable, machine parseable</h2>
 
-                <p>Logs should be human readable and unambiguously parseable.</p>
+                <p>Logs should be <strong>human readable</strong> and <strong>unambiguously parseable</strong>.</p>
                 <pre><code class="php" data-trim data-noescape>
-<mark class="fragment inserts">[2017-12-12T14:30:51.965Z] </mark>Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
+<mark class="fragment inserts" data-fragment-index="0">[2017-12-12T14:30:51.965Z] </mark>Order "REF-42"<mark class="fragment removes" data-fragment-index="0"> failed on 12/12/17 at 14h30</mark>: payment gateway unreachable.
                 </code></pre>
 
                 <aside class="notes">
@@ -198,13 +194,9 @@ Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
             <section>
                 <h2>Human readable, machine parseable</h2>
 
-                <p>Logs should be human readable and unambiguously parseable.</p>
-                <pre><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order "REF-42" failed: payment gateway unreachable.
-                </code></pre>
-
-                <pre class="fragment"><code class="php" data-trim>
-[2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
+                <p>Logs should be <strong>human readable</strong> and <strong>unambiguously parseable</strong>.</p>
+                <pre><code class="json" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] <mark class="fragment removes" data-fragment-index="0">Order "REF-42" failed: payment gateway unreachable.</mark><mark class="fragment inserts" data-fragment-index="0">Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}</mark>
                 </code></pre>
 
                 <aside class="notes">
