@@ -118,13 +118,11 @@
                 </p>
 
                 <aside class="notes">
-                    In terms of logging strategy, we are mainly interested by user actions of the platform and
+                    In terms of logging strategy, we (TEA) are mainly interested by user actions of the platform and
                     potential errors.
 
-                    For our needs, relevant events include mainly include business/user events such as
+                    For our needs, relevant events include business/user events such as
                     orders, refunds, API response times, errors, books integrations, …
-
-                    Log everything, you might need it!
 
                     To help you decide if something is worth logging or not, ask yourself
                     the following question: why logging this would be useful? to whom?
@@ -243,7 +241,6 @@ Order "REF-42" failed on 12/12/17 at 14h30: payment gateway unreachable.
             <section>
                 <h2>Context matters</h2>
 
-                <p>TODOOOOOOOOOOOOOOOOOOOOO</p>
                 <pre><code class="php" data-trim data-noescape>
 [2017-12-12T14:30:51.965Z] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable", <mark>"customer_id": 42, "payment_transaction_id": 4224</mark>}
                 </code></pre>
