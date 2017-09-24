@@ -253,11 +253,11 @@ Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>
             </section>
 
             <section>
-                <h2>Divide and conquer</h2>
+                <h2>Divide and conquer: severity levels</h2>
 
                 <p>Logs should be categorized by severity level.</p>
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[INFO]</mark> Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
+[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[WARNING]</mark> Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
                 </code></pre>
 
                 <aside class="notes">
@@ -271,7 +271,7 @@ Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>
             </section>
 
             <section>
-                <h2>Divide and conquer: log levels</h2>
+                <h2>Divide and conquer: severity levels</h2>
 
                 <p>As defined by the RFC <a href="https://tools.ietf.org/html/rfc5424">5424</a> (Syslog protocol)</p>
 
@@ -322,7 +322,7 @@ Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>
                 <p>Logs should be categorized by subsystem.</p>
 
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[checkout] </mark>[INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
+[2017-12-12T14:30:51.965Z] <mark class="fragment inserts">[checkout] </mark>[WARNING] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
                 </code></pre>
 
                 <aside class="notes">
@@ -334,7 +334,7 @@ Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>
                 <h2>Correlate logs</h2>
 
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] [checkout] [INFO] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"} <mark>{"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"</mark>}
+[2017-12-12T14:30:51.965Z] [checkout] [WARNING] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"} <mark>{"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"</mark>}
                 </code></pre>
 
                 <aside class="notes">
@@ -353,11 +353,22 @@ Order "REF-42" failed<mark class="fragment inserts"> on 12/12/17 at 14h30</mark>
             </section>
 
             <section>
+                <h2><em>Actionable</em> logs</h2>
+
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] [metadata] [WARNING] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/metadata/exports", <mark>"_action": "The export could not be generated because the target directory is not writable. Fix the permissions on the directory and retry the export (`./bin/console tea:export --request=42 --retry`)"</mark>}
+                </code></pre>
+
+                <aside class="notes">
+                </aside>
+            </section>
+
+            <section>
                 <h2>Infrastructure considerations</h2>
 
                 <ul>
-                    <li>compress your logs</li>
                     <li>rotate (and eventually remove) your logs</li>
+                    <li>compress your logs</li>
                     <li>write logs locally</li>
                 </ul>
 
