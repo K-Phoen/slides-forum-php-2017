@@ -172,6 +172,10 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                     The "when" question wasn't answered by the last log entry.
                     Timestamps help us correlate logs with other events (was there
                     a global outage in our banking service at that time?)
+
+                    That's why we include dates in our log entries.
+
+                    But there is still an issue here: the date format is ambiguous!
                 </aside>
             </section>
 
@@ -184,7 +188,8 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                 </code></pre>
 
                 <aside class="notes">
-
+                    In order to avoid ambiguities, we will only use standard formats (ISO 8601 for instance)
+                    and we will always indicate the date as first information of the log entries (for consistency).
                 </aside>
             </section>
 
@@ -193,7 +198,7 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
 
                 <p>Logs should be <strong>human readable</strong> and <strong>unambiguously parseable</strong>.</p>
                 <pre><code class="json" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] Order "<mark class="fragment removes" data-fragment-index="0">REF-42</mark><mark class="fragment inserts" data-fragment-index="0">{order_ref}</mark>" failed: <mark class="fragment removes" data-fragment-index="0">payment gateway unreachable.</mark><mark class="fragment inserts" data-fragment-index="0">{reason}-- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}</mark>
+[2017-12-12T14:30:51.965Z] Order "<mark class="fragment removes" data-fragment-index="0">REF-42</mark><mark class="fragment inserts" data-fragment-index="0">{order_ref}</mark>" failed: <mark class="fragment removes" data-fragment-index="0">payment gateway unreachable.</mark><mark class="fragment inserts" data-fragment-index="0">{reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}</mark>
                 </code></pre>
 
                 <aside class="notes">
@@ -319,7 +324,7 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                 <p>Logs should be categorized by subsystem.</p>
 
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] <span class="fragment inserts"><mark>[checkout]</mark> </span>[WARNING] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"}
+[2017-12-12T14:30:51.965Z] [WARNING] <span class="fragment inserts"><mark>[metadata]</mark> </span>Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/home/sftp/exports"}
                 </code></pre>
 
                 <aside class="notes">
@@ -331,7 +336,7 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                 <h2>Correlate logs</h2>
 
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] [checkout] [WARNING] Order {order_ref} failed: {reason} -- {"order_ref": "REF-42", "reason": "payment gateway unreachable"} <mark>{"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"</mark>}
+[2017-12-12T14:30:51.965Z] [WARNING] [metadata] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/hom/sftp/exports"} <mark>{"request_id": "7d5e8092-a13d-45b8-adb4-b26c18806825"</mark>}
                 </code></pre>
 
                 <aside class="notes">
@@ -353,7 +358,7 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                 <h2><em>Actionable</em> logs</h2>
 
                 <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] [metadata] [WARNING] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/metadata/exports", <mark>"_action": "The export could not be generated because the target directory is not writable. Fix the permissions on the directory and retry the export (`./bin/console tea:export --request=42 --retry`)"</mark>}
+[2017-12-12T14:30:51.965Z] [WARNING] [metadata] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/hom/sftp/exports", <mark>"_action": "The export could not be generated because the target directory is not writable. Fix the permissions on the directory and retry the export (`./bin/console tea:export --request=42 --retry`)"</mark>}
                 </code></pre>
 
                 <aside class="notes">
