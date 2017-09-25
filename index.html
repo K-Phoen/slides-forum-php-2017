@@ -317,6 +317,17 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
             </section>
 
             <section>
+                <h2><em>Actionable</em> logs</h2>
+
+                <pre><code class="php" data-trim data-noescape>
+[2017-12-12T14:30:51.965Z] [WARNING] [metadata] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/hom/sftp/exports", <mark>"_action": "The export could not be generated because the target directory is not writable. Fix the permissions on the directory and retry the export (`./bin/console tea:export --request=42 --retry`)"</mark>}
+                </code></pre>
+
+                <aside class="notes">
+                </aside>
+            </section>
+
+            <section>
                 <h2>Correlate logs</h2>
 
                 <pre><code class="php" data-trim data-noescape>
@@ -337,17 +348,6 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
                     * the other represents extra metadata automatically added to any event emitted by the application.
 
                     Monolog handles that nicely using "Processors": https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md#processors
-                </aside>
-            </section>
-
-            <section>
-                <h2><em>Actionable</em> logs</h2>
-
-                <pre><code class="php" data-trim data-noescape>
-[2017-12-12T14:30:51.965Z] [WARNING] [metadata] Export generation failed: {reason} -- {"reason": "export directory not writable", "export_ref": 42, "export_directory": "/hom/sftp/exports", <mark>"_action": "The export could not be generated because the target directory is not writable. Fix the permissions on the directory and retry the export (`./bin/console tea:export --request=42 --retry`)"</mark>}
-                </code></pre>
-
-                <aside class="notes">
                 </aside>
             </section>
 
