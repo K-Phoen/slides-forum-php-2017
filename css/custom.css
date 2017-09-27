@@ -40,6 +40,7 @@
 
 .reveal section pre code {
     white-space: initial;
+    color: white;
 }
 
 .reveal .fragment.inserts {
