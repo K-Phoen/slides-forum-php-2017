@@ -40,7 +40,11 @@
 
 .reveal section pre code {
     white-space: initial;
-    color: white;
+    background-color: #f3f3f3;
+}
+
+code .hljs-string {
+    color: #348533;
 }
 
 .reveal .fragment.inserts {
@@ -65,7 +69,6 @@
 }
 
 .reveal mark, .reveal mark * {
-    font-weight: bold;
     background-color: #74BC74;
     color: #3f3f3f;
     border-radius: 3px;
