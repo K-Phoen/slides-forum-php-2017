@@ -73,3 +73,7 @@ code .hljs-string {
     color: #3f3f3f;
     border-radius: 3px;
 }
+
+.reveal ul.no-decoration {
+    list-style-type: none;
+}

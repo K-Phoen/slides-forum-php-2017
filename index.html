@@ -36,20 +36,29 @@
             -->
 
             <section>
-                <h2>About this talk…</h2>
+                <h2>We will talk about logs…</h2>
 
+                <ul class="no-decoration">
+                    <li class="fragment">… even if they are not “<em>trendy</em>”</li>
+                    <li class="fragment">… because they are <b>valuable</b></li>
+                    <li class="fragment">… and often <b>used inconsistently</b></li>
+                </ul>
 
                 <aside class="notes">
                     Every "real-world" application has some kind of logging infrastructure.
                     Sometimes it's quick and simple (error_log), sometimes it's more sophisticated and configurable (Monolog).
 
                     Unfortunately, many applications use logging inconsistently. The logging infrastructure is usually
-                    grown organically and not thought through. Logging isn't usually the most loved and fun aspect of the development.
+                    grown organically and not thought through. Usually, it's not the most loved and fun aspect of the development.
                     Lots of us log blindly and without thinking of who will read these logs and why.
 
-                    In this talk, we will take some time to talk about logging in large applications.
+                    In this talk, we will take some time to see how to make our logs more valuable (and why).
                     Log exploitation (with tools such as ELK stacks/Graylog/… ) will not be addressed.
                 </aside>
+            </section>
+
+            <section>
+                <h2>How can we write better logs?</h2>
             </section>
 
             <section>
@@ -351,6 +360,17 @@ Order "REF-42" failed<span class="fragment inserts"> <mark>on 12/12/17 at 14h30<
 
                     Monolog handles that nicely using "Processors": https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md#processors
                 </aside>
+            </section>
+
+            <section>
+                <h2>Summary</h2>
+
+                <ul>
+                    <li>determine a logging <b>strategy</b></li>
+                    <li>write <b>explicit and unambiguous</b> messages</li>
+                    <li>use <b>standard notations</b></li>
+                    <li>include as much <b>relevant context</b> as you can</li>
+                </ul>
             </section>
 
             <section>
